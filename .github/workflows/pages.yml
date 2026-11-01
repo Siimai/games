@@ -22,8 +22,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: game-content
       - uses: actions/configure-pages@v5
       - name: Build static games page
+        env:
+          GAMES_SOURCE: game-content
         run: python3 scripts/build_site.py
       - uses: actions/upload-pages-artifact@v3
         with:

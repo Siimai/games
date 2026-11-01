@@ -1,4 +1,5 @@
 from html import escape
+import os
 from pathlib import Path
 import re
 import shutil
@@ -7,13 +8,16 @@ from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "_site"
+GAMES_SOURCE = Path(os.environ.get("GAMES_SOURCE", ROOT))
+if not GAMES_SOURCE.is_absolute():
+    GAMES_SOURCE = ROOT / GAMES_SOURCE
 START = "<!-- GAME_LIST_START -->"
 END = "<!-- GAME_LIST_END -->"
 
 games = sorted(
     (
         folder
-        for folder in ROOT.iterdir()
+        for folder in GAMES_SOURCE.iterdir()
         if folder.is_dir()
         and not folder.is_symlink()
         and not folder.name.startswith(".")
