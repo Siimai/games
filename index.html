@@ -21,41 +21,11 @@
     <main>
       <h1>Games</h1>
       <p>Pick a game to play:</p>
-      <p id="status" aria-live="polite">Loading games…</p>
-      <ul id="games"></ul>
+      <ul>
+        <!-- GAME_LIST_START -->
+        <li>No games found yet.</li>
+        <!-- GAME_LIST_END -->
+      </ul>
     </main>
-    <script>
-      const status = document.querySelector("#status");
-      const games = document.querySelector("#games");
-
-      fetch("https://api.github.com/repos/Siimai/games/git/trees/main?recursive=1")
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Unable to load games");
-          }
-          return response.json();
-        })
-        .then(({ tree }) => {
-          const gameFolders = new Set(
-            tree
-              .filter((entry) => entry.type === "blob" && /^[^/]+\/index\.html$/.test(entry.path))
-              .map((entry) => entry.path.split("/")[0])
-          );
-
-          for (const folder of [...gameFolders].sort()) {
-            const item = document.createElement("li");
-            const link = document.createElement("a");
-            link.href = `./${encodeURIComponent(folder)}/`;
-            link.textContent = folder;
-            item.append(link);
-            games.append(item);
-          }
-
-          status.textContent = gameFolders.size ? "" : "No games found yet.";
-        })
-        .catch(() => {
-          status.textContent = "Games could not be loaded. Please try again later.";
-        });
-    </script>
   </body>
 </html>
